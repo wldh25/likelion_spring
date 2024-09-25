@@ -1,0 +1,53 @@
+###회원가입
+POST http://localhost:8080/api/v1/signup
+Content-Type: application/json
+
+{
+  "email": "abc@naver.com",
+  "password": "1234"
+}
+
+###로그인
+POST http://localhost:8080/api/v1/login
+Content-Type: application/json
+
+{
+  "email": "abc@naver.com",
+  "password": "1234"
+}
+
+### 책 등록
+POST http://localhost:8080/api/v1/books
+Content-Type: application/json
+
+{
+    "title": "클린코드",
+    "category": "컴푸터공학",
+    "author": "로버트 C. 마틴",
+    "publisher": "인사이트",
+    "isbn": "9788966260959",
+    "quantity": 3
+}
+
+### 도서 예약 등록
+POST http://localhost:8080/api/v1/reservations
+Content-Type: application/json
+
+{
+  "book_id": 1,
+  "member_id": 1
+}
+
+### 예약 정보 조회
+GET http://localhost:8080/api/v1/reservations/3
+
+### 예약 취소
+DELETE http://localhost:8080/api/v1/reservations/3
+
+### 사용자 예약 목록 조회
+GET http://localhost:8080/api/v1/members/1/reservations
+
+### 카운트
+GET http://localhost:8080/api/v1/books/1/reservations
+
+
