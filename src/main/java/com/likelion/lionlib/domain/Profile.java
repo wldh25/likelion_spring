@@ -24,4 +24,12 @@ public class Profile extends BaseTime {
     private String major;
     private String imageUrl;
     private String githubLink;
+
+    public void updateProfile(String bio, int generation, String major, String imageUrl, String githubLink) {
+        this.bio = bio;
+        this.generation = generation;
+        this.major = major;
+        this.imageUrl = imageUrl;
+        this.githubLink = githubLink;
+    }
 }

@@ -1,13 +1,17 @@
 package com.likelion.lionlib.controller;
 
+import com.likelion.lionlib.dto.CustomUserDetails;
 import com.likelion.lionlib.dto.ReservateRequest;
 import com.likelion.lionlib.dto.ReservateResponse;
 import com.likelion.lionlib.dto.ReservationsResponse;
+import com.likelion.lionlib.service.AuthService;
 import com.likelion.lionlib.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,9 +25,9 @@ public class ReservationController {
 
     // 도서 예약 등록
     @PostMapping("/reservations")
-    public ResponseEntity<ReservateResponse> addReservation(@RequestBody ReservateRequest reservateRequest) {
+    public ResponseEntity<ReservateResponse> addReservation(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody ReservateRequest reservateRequest) {
         log.info("Request POST a reservation: {}", reservateRequest);
-        ReservateResponse savedReservation = reservationService.addReservation(reservateRequest);
+        ReservateResponse savedReservation = reservationService.addReservation(customUserDetails,reservateRequest);
         log.info("Response POST a reservation: {}", savedReservation);
         return ResponseEntity.ok(savedReservation);
     }
@@ -47,9 +51,10 @@ public class ReservationController {
     }
 
     //사용자 예약 목록 조회
-    @GetMapping("/members/{memberId}/reservations")
-    public ResponseEntity<List<ReservateResponse>> getReservationsByMemberId(@PathVariable Long memberId){
+    @GetMapping("/members/reservations")
+    public ResponseEntity<List<ReservateResponse>> getReservationsByMemberId(Authentication authentication){
         log.info("Request GET all reservations");
+        Long memberId = ((CustomUserDetails) authentication.getPrincipal()).getId();
         List<ReservateResponse> reservations = reservationService.getReservationsByMemberId(memberId);
         log.info("Response GET all reservations: {}", reservations);
         return ResponseEntity.ok(reservations);

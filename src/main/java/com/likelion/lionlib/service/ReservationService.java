@@ -4,10 +4,8 @@ import com.likelion.lionlib.domain.Book;
 import com.likelion.lionlib.domain.Loan;
 import com.likelion.lionlib.domain.Member;
 import com.likelion.lionlib.domain.Reservation;
-import com.likelion.lionlib.dto.LoanResponse;
-import com.likelion.lionlib.dto.ReservateRequest;
-import com.likelion.lionlib.dto.ReservateResponse;
-import com.likelion.lionlib.dto.ReservationsResponse;
+import com.likelion.lionlib.dto.*;
+import com.likelion.lionlib.exception.ReservationNotFoundException;
 import com.likelion.lionlib.repository.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,8 +19,8 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final GlobalService globalService;
 
-    public ReservateResponse addReservation(ReservateRequest reservateRequest) {
-        Member member = globalService.findMemberById(reservateRequest.getMemberId());
+    public ReservateResponse addReservation(CustomUserDetails customUserDetails, ReservateRequest reservateRequest) {
+        Member member = globalService.findMemberById(customUserDetails.getId());
         Book book = globalService.findBookById(reservateRequest.getBookId());
         Reservation savedReservation = Reservation.builder()
                 .member(member)
@@ -50,7 +48,7 @@ public class ReservationService {
 
     private Reservation findReservationById(Long reservationId) {
         return reservationRepository.findById(reservationId)
-                .orElseThrow(() -> new RuntimeException("Reservation nott found"));
+                .orElseThrow(() -> new ReservationNotFoundException(reservationId));
     }
 
     private List<Reservation> findReservationsByMemberId(Long memberId) {

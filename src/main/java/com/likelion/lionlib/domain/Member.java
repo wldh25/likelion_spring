@@ -23,4 +23,8 @@ public class Member extends BaseTime {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    public void updateName (String name){
+        this.name = name;
+    }
 }
